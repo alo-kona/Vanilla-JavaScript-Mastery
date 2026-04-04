@@ -49,6 +49,11 @@ const contributors = [
     dirPath: 'alo-kona',
     email: 'alokona26@gmail.com',
   },
+  {
+    name: 'Jubayar Ahamad',
+    dirPath: 'yet-yuvi',
+    email: 'eng.jubayar@gmail.com',
+  },
 ];
 
 const projectsContainer = document.getElementById('projects-container');
