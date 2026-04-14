@@ -9,6 +9,14 @@ const ERROR_CLASS = "border-red-500";
 compareButton.addEventListener("click", compareFunction);
 resetButton.addEventListener("click", resetFunction);
 
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault(); 
+    compareFunction();
+  }
+  if (e.key === "Escape") resetFunction();
+});
+
 function compareFunction() {
   resetErrorEffect();
 
@@ -56,8 +64,8 @@ function resetErrorEffect() {
 }
 
 function resetFunction() {
-  inputValue1.value = "";
-  inputValue2.value = "";
+  inputValue1.value = "0";
+  inputValue2.value = "0";
   resultShowing("");
   resetErrorEffect();
 }
