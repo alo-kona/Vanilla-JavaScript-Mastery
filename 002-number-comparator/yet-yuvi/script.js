@@ -19,6 +19,7 @@ window.addEventListener("keydown", (e) => {
 
 function compareFunction() {
   resetErrorEffect();
+  resultShowing("");
 
   if (!isValidInput()) {
     return;
