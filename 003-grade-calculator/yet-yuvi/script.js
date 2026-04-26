@@ -10,7 +10,6 @@ const FAILURE_COLOR = 'text-red-600';
 
 scoreInput.addEventListener('input', () => {
   clearError();
-  result.innerText = '';
 });
 
 scoreInput.addEventListener('keydown', (e) => {
@@ -33,9 +32,6 @@ calculateBtn.addEventListener('click', function () {
 });
 
 function validateInput() {
-  result.innerText = '';
-  result.className = '';
-
   const rawValue = scoreInput.value.trim();
 
   if (!rawValue) {
@@ -67,6 +63,8 @@ function showError(message) {
 function clearError() {
   scoreInput.classList.remove(ERROR_CLASS);
   errorMessage.classList.add('hidden');
+  result.innerText = '';
+  result.className = '';
 }
 
 function calculateGrade(marks) {
