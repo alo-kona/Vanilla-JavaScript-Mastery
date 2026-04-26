@@ -13,8 +13,11 @@ scoreInput.addEventListener('input', () => {
   result.innerText = '';
 });
 
-scoreInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') calculateBtn.click();
+scoreInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    calculateBtn.click();
+  }
 });
 
 calculateBtn.addEventListener('click', function () {
@@ -32,12 +35,20 @@ calculateBtn.addEventListener('click', function () {
 function validateInput() {
   result.innerText = '';
   result.className = '';
-  if (!scoreInput.value) {
+
+  const rawValue = scoreInput.value.trim();
+
+  if (!rawValue) {
     showError('Please provide a score');
     return null;
   }
 
-  const score = parseFloat(scoreInput.value);
+  const score = parseFloat(rawValue);
+
+  if (isNaN(score)) {
+    showError('Please enter a valid number');
+    return null;
+  }
 
   if (score < 0 || score > 100) {
     showError('Invalid score');
