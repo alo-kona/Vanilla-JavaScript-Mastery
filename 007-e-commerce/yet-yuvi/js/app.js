@@ -59,14 +59,55 @@ const products = [
 
 const productGrid = document.getElementById('product-grid');
 
+const getProductImageComponent = (product) => {
+  const productImageComponent = document.createElement('img');
+  productImageComponent.src = product.image;
+  productImageComponent.alt = product.name;
+  productImageComponent.className = 'w-full mb-4 object-cover rounded';
+  return productImageComponent;
+};
+
+const getProductNameComponent = (productName) => {
+  const productNameComponent = document.createElement('h3');
+  productNameComponent.className = 'text-lg font-semibold mb-2';
+  productNameComponent.textContent = productName;
+  return productNameComponent;
+};
+
+const getProductPriceComponent = (productPrice) => {
+  const productPriceComponent = document.createElement('p');
+  productPriceComponent.className = 'text-gray-700';
+  productPriceComponent.textContent = `$${productPrice}`;
+  return productPriceComponent;
+};
+
+const getAddToCartBtnComponent = (productId) => {
+  const addToCartBtn = document.createElement('button');
+  addToCartBtn.className =
+    'bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded mt-2';
+  addToCartBtn.textContent = 'Add to Cart';
+  addToCartBtn.addEventListener('click', () => {
+    alert(`Product with ID ${productId} added to cart!`);
+  });
+  return addToCartBtn;
+};
+
 const getProductCard = (product) => {
   const productCard = document.createElement('div');
   productCard.className = 'bg-white p-4 rounded shadow';
-  productCard.innerHTML = `
-    <img src="${product.image}" alt="${product.name}">
-    <h3>${product.name}</h3>
-    <p>$${product.price.toFixed(2)}</p>
-  `;
+
+  const productImageComponent = getProductImageComponent(product);
+  const productNameComponent = getProductNameComponent(product.name);
+  const productPriceComponent = getProductPriceComponent(product.price);
+  const addToCartBtn = getAddToCartBtnComponent(product.id);
+
+  productCard.append(
+    productImageComponent,
+    productNameComponent,
+    productPriceComponent,
+    addToCartBtn,
+  );
+
   return productCard;
 };
 
