@@ -58,7 +58,32 @@ const products = [
 ];
 
 const productGrid = document.getElementById('product-grid');
+const cartList = document.getElementById('cart-items');
 
+//////////////////////////////////
+const cart = [];
+const addProductToCart = (product) => {
+  cart.push(product);
+};
+
+const getCartListItem = (product) => {
+  const cartListItem = document.createElement('li');
+  cartListItem.textContent = `${product.name} x1 $${product.price}`;
+  return cartListItem;
+};
+
+const renderCart = (cart) => {
+  const cartListItems = cart.map((product) => {
+    const cartListItem = getCartListItem(product);
+    return cartListItem;
+  });
+
+  cartList.innerHTML = '';
+  cartList.append(...cartListItems);
+};
+//////////////////////////////////
+
+//////////////////////////////////
 const getProductImageComponent = (product) => {
   const productImageComponent = document.createElement('img');
   productImageComponent.src = product.image;
@@ -81,13 +106,14 @@ const getProductPriceComponent = (productPrice) => {
   return productPriceComponent;
 };
 
-const getAddToCartBtnComponent = (productId) => {
+const getAddToCartBtnComponent = (product) => {
   const addToCartBtn = document.createElement('button');
   addToCartBtn.className =
     'bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded mt-2';
   addToCartBtn.textContent = 'Add to Cart';
   addToCartBtn.addEventListener('click', () => {
-    alert(`Product with ID ${productId} added to cart!`);
+    addProductToCart(product);
+    renderCart(cart);
   });
   return addToCartBtn;
 };
@@ -99,7 +125,7 @@ const getProductCard = (product) => {
   const productImageComponent = getProductImageComponent(product);
   const productNameComponent = getProductNameComponent(product.name);
   const productPriceComponent = getProductPriceComponent(product.price);
-  const addToCartBtn = getAddToCartBtnComponent(product.id);
+  const addToCartBtn = getAddToCartBtnComponent(product);
 
   productCard.append(
     productImageComponent,
@@ -110,6 +136,7 @@ const getProductCard = (product) => {
 
   return productCard;
 };
+////////////////////////////////
 
 const renderProducts = (products) => {
   const productCards = products.map((product) => {
