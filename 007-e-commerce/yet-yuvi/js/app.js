@@ -63,18 +63,26 @@ const cartList = document.getElementById('cart-items');
 //////////////////////////////////
 const cart = [];
 const addProductToCart = (product) => {
-  cart.push(product);
+const productIndexInCart = cart.findIndex((item) => item.id === product.id);
+  if (productIndexInCart === -1) {
+    cart.push({
+      ...product,
+      quantity: 1,
+    });
+    return;
+  }
+  cart[productIndexInCart].quantity++;
 };
 
-const getCartListItem = (product) => {
+const getCartListItem = (cartItem) => {
   const cartListItem = document.createElement('li');
-  cartListItem.textContent = `${product.name} x1 $${product.price}`;
+  cartListItem.textContent = `${cartItem.name} x${cartItem.quantity} $${(cartItem.price * cartItem.quantity).toFixed(2)}`;
   return cartListItem;
 };
 
 const renderCart = (cart) => {
-  const cartListItems = cart.map((product) => {
-    const cartListItem = getCartListItem(product);
+  const cartListItems = cart.map((cartItem) => {
+    const cartListItem = getCartListItem(cartItem);
     return cartListItem;
   });
 
