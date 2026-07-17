@@ -61,9 +61,29 @@ const productGrid = document.getElementById('product-grid');
 const cartList = document.getElementById('cart-items');
 
 //////////////////////////////////
-const cart = [];
+const CART_KEY = 'e-commerce-cart';
+
+const saveCartItemsToLocalStorage = (cart) => {
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+};
+
+const getCartItemsFromLocalStorage = () => {
+  try {
+    const cartItems = JSON.parse(localStorage.getItem(CART_KEY));
+    return cartItems ? cartItems : [];
+  } catch (error) {
+    console.error(
+      'There was an error parsing the cart items from local storage:',
+      error,
+    );
+    return [];
+  }
+};
+
+const cart = getCartItemsFromLocalStorage();
+
 const addProductToCart = (product) => {
-const productIndexInCart = cart.findIndex((item) => item.id === product.id);
+  const productIndexInCart = cart.findIndex((item) => item.id === product.id);
   if (productIndexInCart === -1) {
     cart.push({
       ...product,
@@ -88,6 +108,7 @@ const renderCart = (cart) => {
 
   cartList.innerHTML = '';
   cartList.append(...cartListItems);
+  saveCartItemsToLocalStorage(cart);
 };
 //////////////////////////////////
 
@@ -156,3 +177,4 @@ const renderProducts = (products) => {
 };
 
 renderProducts(products);
+renderCart(cart);
