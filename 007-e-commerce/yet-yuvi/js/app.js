@@ -95,9 +95,41 @@ const addProductToCart = (product) => {
   cart[productIndexInCart].quantity++;
 };
 
+const removeCartItem = (cartItemToRemove) => {
+  const cartItemIndex = cart.findIndex(
+    (cartItem) => cartItem.id === cartItemToRemove.id,
+  );
+  if (cartItemIndex === -1) {
+    alert(`${cartItemToRemove.name} doesn't exist in the cart!!`);
+    return;
+  }
+  if (cart[cartItemIndex].quantity > 1) {
+    cart[cartItemIndex].quantity--;
+    renderCart(cart);
+    return;
+  }
+  if (confirm('Are you sure?')) {
+    cart.splice(cartItemIndex, 1);
+    renderCart(cart);
+  }
+};
+
+const getRemoveFromCartBtn = (cartItem) => {
+  const removeFromCartBtn = document.createElement('button');
+  removeFromCartBtn.className =
+    'bg-gray-200 text-red-500 hover:bg-red-500 hover:text-white px-1 rounded ml-2';
+  removeFromCartBtn.textContent = 'Remove';
+  removeFromCartBtn.addEventListener('click', () => {
+    removeCartItem(cartItem);
+  });
+  return removeFromCartBtn;
+};
+
 const getCartListItem = (cartItem) => {
   const cartListItem = document.createElement('li');
-  cartListItem.textContent = `${cartItem.name} x${cartItem.quantity} $${(cartItem.price * cartItem.quantity).toFixed(2)}`;
+  cartListItem.textContent = `${cartItem.name} x${cartItem.quantity} $${cartItem.price * cartItem.quantity}`;
+  const removeFromCartBtn = getRemoveFromCartBtn(cartItem);
+  cartListItem.appendChild(removeFromCartBtn);
   return cartListItem;
 };
 
