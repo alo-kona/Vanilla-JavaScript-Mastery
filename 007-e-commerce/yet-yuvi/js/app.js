@@ -61,6 +61,8 @@ const productGrid = document.getElementById('product-grid');
 const cartList = document.getElementById('cart-items');
 const totalPriceComponent = document.getElementById('total-price');
 const categoryContainer = document.getElementById('category-filters');
+const applyFiltersBtn = document.getElementById('apply-filters-btn');
+const clearFiltersBtn = document.getElementById('clear-filters-btn');
 
 //////////////////////////////////
 const CART_KEY = 'e-commerce-cart';
@@ -93,19 +95,23 @@ const addProductToCart = (product) => {
     });
     return;
   }
-  cart[productIndexInCart].quantity++;
+  cart[productIndexInCart] = {
+    ...cart[productIndexInCart],
+    quantity: cart[productIndexInCart].quantity + 1,
+  };
 };
 
-const removeCartItem = (cartItemToRemove) => {
-  const cartItemIndex = cart.findIndex(
-    (cartItem) => cartItem.id === cartItemToRemove.id,
-  );
+const removeCartItem = (productId) => {
+  const cartItemIndex = cart.findIndex((cartItem) => cartItem.id === productId);
   if (cartItemIndex === -1) {
-    alert(`${cartItemToRemove.name} doesn't exist in the cart!!`);
+    alert(`This item doesn't exist in the cart!!`);
     return;
   }
   if (cart[cartItemIndex].quantity > 1) {
-    cart[cartItemIndex].quantity--;
+    cart[cartItemIndex] = {
+      ...cart[cartItemIndex],
+      quantity: cart[cartItemIndex].quantity - 1,
+    };
     renderCart(cart);
     return;
   }
@@ -115,13 +121,13 @@ const removeCartItem = (cartItemToRemove) => {
   }
 };
 
-const getRemoveFromCartBtn = (cartItem) => {
+const getRemoveFromCartBtn = (productId) => {
   const removeFromCartBtn = document.createElement('button');
   removeFromCartBtn.className =
     'bg-gray-200 text-red-500 hover:bg-red-500 hover:text-white px-1 rounded ml-2';
   removeFromCartBtn.textContent = 'Remove';
   removeFromCartBtn.addEventListener('click', () => {
-    removeCartItem(cartItem);
+    removeCartItem(productId);
   });
   return removeFromCartBtn;
 };
@@ -129,7 +135,7 @@ const getRemoveFromCartBtn = (cartItem) => {
 const getCartListItem = (cartItem) => {
   const cartListItem = document.createElement('li');
   cartListItem.textContent = `${cartItem.name} x${cartItem.quantity} $${cartItem.price * cartItem.quantity}`;
-  const removeFromCartBtn = getRemoveFromCartBtn(cartItem);
+  const removeFromCartBtn = getRemoveFromCartBtn(cartItem.id);
   cartListItem.appendChild(removeFromCartBtn);
   return cartListItem;
 };
@@ -207,22 +213,67 @@ const getProductCard = (product) => {
 };
 ////////////////////////////////
 
-const renderProducts = (products) => {
-  const productCards = products.map((product) => {
-    const productCard = getProductCard(product);
-    return productCard;
-  });
-  productGrid.innerHTML = '';
-  productGrid.append(...productCards);
+////////////////////////////////
+const FILTER_KEY = 'e-commerce-filter';
+
+const saveFiltersToLocalStorage = (filters) => {
+  localStorage.setItem(FILTER_KEY, JSON.stringify(filters));
 };
 
-///////////////////////////////
+const getFiltersFromLocalStorage = () => {
+  const savedFilters = JSON.parse(localStorage.getItem(FILTER_KEY));
+  if (!savedFilters) {
+    return [];
+  }
+  return savedFilters;
+};
+
+let appliedFilters = getFiltersFromLocalStorage();
+let filters = [...appliedFilters];
+
 const getCategoryBtn = (categoryName) => {
   const categoryBtn = document.createElement('button');
   categoryBtn.className =
-    'hover:bg-gray-300 font-semibold py-2 px-4 rounded mr-2 mb-2 bg-gray-200 text-gray-800';
+    'font-semibold py-2 px-4 rounded mr-2 mb-2 transition-colors duration-150';
+  categoryBtn.innerText = categoryName;
 
-  categoryBtn.textContent = categoryName;
+  const updateButtonStyles = () => {
+    if (filters.includes(categoryName)) {
+      categoryBtn.classList.add(
+        'bg-blue-600',
+        'text-white',
+        'hover:bg-blue-700',
+      );
+      categoryBtn.classList.remove(
+        'bg-gray-200',
+        'text-gray-800',
+        'hover:bg-gray-300',
+      );
+    } else {
+      categoryBtn.classList.add(
+        'bg-gray-200',
+        'text-gray-800',
+        'hover:bg-gray-300',
+      );
+      categoryBtn.classList.remove(
+        'bg-blue-600',
+        'text-white',
+        'hover:bg-blue-700',
+      );
+    }
+  };
+
+  updateButtonStyles();
+
+  categoryBtn.addEventListener('click', () => {
+    const filterIndex = filters.findIndex((filter) => filter === categoryName);
+    if (filterIndex === -1) {
+      filters.push(categoryName);
+    } else {
+      filters.splice(filterIndex, 1);
+    }
+    updateButtonStyles();
+  });
   return categoryBtn;
 };
 
@@ -240,6 +291,44 @@ const renderCategories = (products) => {
   categoryContainer.append(...categoryBtns);
 };
 
+applyFiltersBtn.addEventListener('click', () => {
+  appliedFilters = [...filters];
+  saveFiltersToLocalStorage(appliedFilters);
+  renderProducts(products);
+});
+
+clearFiltersBtn.addEventListener('click', () => {
+  filters = [];
+  appliedFilters = [];
+  saveFiltersToLocalStorage(appliedFilters);
+  renderCategories(products);
+  renderProducts(products);
+});
+///////////////////////////////
+
+///////////////////////////////
+const renderProducts = (products) => {
+  let filteredProducts = [...products];
+
+  if (appliedFilters.length > 0) {
+    filteredProducts = products.filter((product) => {
+      if (
+        product.categories.some((category) => appliedFilters.includes(category))
+      ) {
+        return true;
+      }
+      return false;
+    });
+  }
+
+  const productCards = filteredProducts.map((product) => {
+    const productCard = getProductCard(product);
+    return productCard;
+  });
+
+  productGrid.innerHTML = '';
+  productGrid.append(...productCards);
+};
 ///////////////////////////////
 
 renderProducts(products);
