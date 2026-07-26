@@ -54,6 +54,31 @@ const contributors = [
     dirPath: 'yet-yuvi',
     email: 'eng.jubayar@gmail.com',
   },
+  {
+    name: 'Dipu',
+    dirPath: 'Dipu',
+    email: 'email.dipu@example.com',
+  },
+  {
+    name: 'Nazma',
+    dirPath: 'nazma98',
+    email: 'email.nazma@example.com',
+  },
+  {
+    name: 'Shifat',
+    dirPath: 'Shifat',
+    email: 'email.shifat@example.com',
+  },
+  {
+    name: 'Talha',
+    dirPath: 'Talha',
+    email: 'email.talha@example.com',
+  },
+  {
+    name: 'Thanwin',
+    dirPath: 'thanwin',
+    email: 'email.thanwin@example.com',
+  },
 ];
 
 const projectsContainer = document.getElementById('projects-container');
