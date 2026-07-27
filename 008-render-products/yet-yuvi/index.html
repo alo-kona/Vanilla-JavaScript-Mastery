@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Render Products</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="bg-gray-100 p-8">
+    <div class="w-4/5 mx-auto">
+      <h1 class="text-4xl font-bold mb-2 text-center">Available Foods</h1>
+
+      <!-- Loading Indicator -->
+      <p
+        id="loading-text"
+        class="text-center font-semibold text-blue-600 mb-4 h-6"
+      ></p>
+
+      <!-- Content Container -->
+      <div id="content-container">
+        <table
+          class="table-auto w-full bg-white shadow-md rounded-lg overflow-hidden"
+        >
+          <thead>
+            <tr class="bg-gray-200 text-left">
+              <th class="px-4 py-2 border-r border-gray-300">SL No.</th>
+              <th class="px-4 py-2 border-r border-gray-300">Name</th>
+              <th class="px-4 py-2 border-r border-gray-300">Price</th>
+              <th class="px-4 py-2 border-r border-gray-300">Image</th>
+              <th class="px-4 py-2">Type</th>
+            </tr>
+          </thead>
+          <tbody id="productTableBody">
+            <!-- JS dynamic content goes here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script src="./js/script.js"></script>
+  </body>
+</html>
