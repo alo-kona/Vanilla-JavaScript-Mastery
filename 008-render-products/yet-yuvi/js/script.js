@@ -15,39 +15,57 @@ const getProducts = async () => {
   return await productResponse.json();
 };
 
-// 2. Simply renders serial number and product name in table rows using document.createElement
-const renderProductList = (products) => {
+// 2. Create product rows
+const createProductRows = (products) => {
   productTableBody.innerHTML = '';
 
   const productTableRows = products.map((product, index) => {
     const row = document.createElement('tr');
-    row.className = 'hover:bg-gray-100';
+    row.className = 'hover:bg-gray-100 transition-colors';
 
+    // SL No.
     const serialCol = document.createElement('td');
     serialCol.innerText = index + 1;
-    serialCol.className = 'border px-4 py-2 font-semibold';
+    serialCol.className = 'border px-4 py-2 text-center font-semibold';
 
+    // Name
     const nameCol = document.createElement('td');
     nameCol.innerText = product.name;
     nameCol.className = 'border px-4 py-2 capitalize';
 
+    // Price
     const priceCol = document.createElement('td');
-    priceCol.innerText = '-';
-    priceCol.className = 'border px-4 py-2 text-center';
+    priceCol.innerText = `$${product.price.toFixed(2)}`;
+    priceCol.className = 'border px-4 py-2 font-semibold text-green-600';
 
+    // Image
     const imageCol = document.createElement('td');
-    imageCol.innerText = '-';
     imageCol.className = 'border px-4 py-2 text-center';
 
+    const img = document.createElement('img');
+    img.src = `assets/images/${product.image}`;
+    img.alt = product.name;
+    img.className = 'w-24 h-12 object-cover mx-auto rounded shadow-sm';
+    img.loading = 'lazy';
+
+    // Image fallback handling
+    img.onerror = () => {
+      imageCol.innerText = 'No Image';
+      imageCol.className += ' text-xs text-gray-400 italic';
+    };
+    imageCol.appendChild(img);
+
+    // Type
     const typeCol = document.createElement('td');
-    typeCol.innerText = '-';
-    typeCol.className = 'border px-4 py-2 text-center';
+    typeCol.innerText = product.type;
+    typeCol.className = 'border px-4 py-2 capitalize';
 
+    // Append all columns to the row
     row.append(serialCol, nameCol, priceCol, imageCol, typeCol);
-
     return row;
   });
 
+  // Append all rows to the table body at once
   productTableBody.append(...productTableRows);
 };
 
@@ -57,7 +75,7 @@ const renderProducts = async () => {
 
   try {
     const products = await getProducts();
-    renderProductList(products);
+    createProductRows(products);
   } catch (error) {
     console.error('Error fetching data:', error);
   } finally {
