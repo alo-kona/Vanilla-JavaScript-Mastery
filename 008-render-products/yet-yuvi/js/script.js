@@ -78,6 +78,18 @@ const renderProducts = async () => {
     createProductRows(products);
   } catch (error) {
     console.error('Error fetching data:', error);
+
+    // Friendly UI message for fetch errors
+    productTableBody.innerHTML = '';
+    const errorRow = document.createElement('tr');
+    const errorCol = document.createElement('td');
+
+    errorCol.colSpan = 5;
+    errorCol.innerText = 'Failed to load products. Please try again later.';
+    errorCol.className = 'text-center py-4 text-red-500 font-medium border';
+
+    errorRow.appendChild(errorCol);
+    productTableBody.appendChild(errorRow);
   } finally {
     loadingComponent.innerText = '';
   }
