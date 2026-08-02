@@ -31,6 +31,10 @@ const projects = [
     name: 'Render Products (Promise, async-await)',
     dirPath: '008-render-products',
   },
+  {
+    name: 'Employee Roster',
+    dirPath: '009-employee-roster',
+  },
 ];
 
 const contributors = [
